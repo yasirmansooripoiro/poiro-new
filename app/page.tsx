@@ -1,3 +1,4 @@
+import { FloatingDockDemo } from "@/components/dock";
 import InfiniteGallery from "@/components/infinite";
 import OurWorkSection from "@/components/our-work";
 import { WorksGallery } from "@/components/works-gallery";
@@ -35,6 +36,7 @@ export default function Home() {
       {/* section : About */}
       <WorksGallery />
 
+      <FloatingDockDemo />
       {/* section : Contact */}
       <section className="min-h-screen py-20 bg-background">
         <div className="container mx-auto px-4">
