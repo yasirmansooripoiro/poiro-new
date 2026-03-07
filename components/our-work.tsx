@@ -126,11 +126,11 @@ const OurWorkSection = () => {
     <section
       ref={containerRef}
       className="relative w-full bg-background overflow-hidden"
-      style={{ minHeight: "150vh" }}
+      style={{ minHeight: "125vh" }}
     >
       <div
         ref={textWrapperRef}
-        className="sticky top-0 h-screen flex items-center justify-center pointer-events-none z-20"
+        className="sticky top-0 h-screen flex items-start justify-center pt-16 md:pt-24 pointer-events-none z-20"
       >
         <div className="w-full max-w-2xl px-6 md:px-8 text-center pointer-events-auto">
           <p className="text-gray-400 text-sm md:text-base mb-4 font-medium tracking-wide">

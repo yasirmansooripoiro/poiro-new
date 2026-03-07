@@ -14,6 +14,9 @@ export default function BlocksOverlay() {
   const blockRefs = useRef<Array<HTMLDivElement | null>>([]);
   const trailRef = useRef<number[]>([]);
   const idleTimeoutRef = useRef<number | null>(null);
+  const frameRef = useRef<number | null>(null);
+  const pointerRef = useRef<{ x: number; y: number } | null>(null);
+  const lastPaintedIndexRef = useRef<number | null>(null);
   const [grid, setGrid] = useState(() => ({
     columns: HARD_CODED_COLUMNS,
     rows: HARD_CODED_BLOCKS_PER_COLUMN,
@@ -33,7 +36,17 @@ export default function BlocksOverlay() {
       const blockSize = width / columns;
       const rows = Math.max(1, Math.ceil(height / blockSize));
 
-      setGrid({ columns, rows, blockSize });
+      setGrid((prev) => {
+        if (
+          prev.columns === columns &&
+          prev.rows === rows &&
+          prev.blockSize === blockSize
+        ) {
+          return prev;
+        }
+
+        return { columns, rows, blockSize };
+      });
     };
 
     syncGrid();
@@ -56,6 +69,7 @@ export default function BlocksOverlay() {
         }
       });
       trailRef.current = [];
+      lastPaintedIndexRef.current = null;
     };
 
     const scheduleIdleClear = () => {
@@ -70,6 +84,10 @@ export default function BlocksOverlay() {
     };
 
     const paintTrail = (activeIndex: number) => {
+      if (activeIndex === lastPaintedIndexRef.current) {
+        return;
+      }
+
       const previousTrail = trailRef.current;
       const nextTrail = [
         activeIndex,
@@ -99,20 +117,24 @@ export default function BlocksOverlay() {
         const ratio = trailIndex / denominator;
         const opacity = 1 - ratio * opacityRange;
 
-        block.style.backgroundColor = ACTIVE_BLOCK_COLOR;
         block.style.opacity = opacity.toFixed(3);
       });
 
       trailRef.current = nextTrail;
+      lastPaintedIndexRef.current = activeIndex;
       scheduleIdleClear();
     };
 
-    const handlePointerMove = (event: PointerEvent) => {
-      if (grid.columns <= 0 || grid.rows <= 0) {
+    const flushPointer = () => {
+      frameRef.current = null;
+      const point = pointerRef.current;
+
+      if (!point || grid.columns <= 0 || grid.rows <= 0) {
         return;
       }
-      const xRatio = event.clientX / Math.max(window.innerWidth, 1);
-      const yRatio = event.clientY / Math.max(window.innerHeight, 1);
+
+      const xRatio = point.x / Math.max(window.innerWidth, 1);
+      const yRatio = point.y / Math.max(window.innerHeight, 1);
 
       const column = Math.min(
         grid.columns - 1,
@@ -127,10 +149,27 @@ export default function BlocksOverlay() {
       paintTrail(index);
     };
 
-    window.addEventListener("pointermove", handlePointerMove);
+    const handlePointerMove = (event: PointerEvent) => {
+      pointerRef.current = { x: event.clientX, y: event.clientY };
+
+      if (frameRef.current == null) {
+        frameRef.current = window.requestAnimationFrame(flushPointer);
+      }
+    };
+
+    window.addEventListener("pointermove", handlePointerMove, {
+      passive: true,
+    });
 
     return () => {
       window.removeEventListener("pointermove", handlePointerMove);
+
+      if (frameRef.current != null) {
+        window.cancelAnimationFrame(frameRef.current);
+        frameRef.current = null;
+      }
+
+      pointerRef.current = null;
 
       if (idleTimeout.current) {
         window.clearTimeout(idleTimeout.current);
@@ -150,6 +189,7 @@ export default function BlocksOverlay() {
           "--blocks-columns": grid.columns,
           "--blocks-rows": grid.rows,
           "--block-size": `${grid.blockSize}px`,
+          "--active-block-color": ACTIVE_BLOCK_COLOR,
         } as CSSProperties
       }
     >

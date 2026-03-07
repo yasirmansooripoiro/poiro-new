@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   IconBrandGithub,
   IconBrandX,
@@ -14,12 +14,19 @@ import Image from "next/image";
 
 export function FloatingDockDemo() {
   const [isVisible, setIsVisible] = useState(false);
+  const isVisibleRef = useRef(false);
 
   useEffect(() => {
     const showAfter = 180;
 
     const handleScroll = () => {
-      setIsVisible(window.scrollY > showAfter);
+      const nextVisible = window.scrollY > showAfter;
+      if (nextVisible === isVisibleRef.current) {
+        return;
+      }
+
+      isVisibleRef.current = nextVisible;
+      setIsVisible(nextVisible);
     };
 
     handleScroll();

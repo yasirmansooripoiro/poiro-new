@@ -11,12 +11,13 @@
   grid-template-rows: repeat(var(--blocks-rows), var(--block-size));
   overflow: hidden;
   pointer-events: none;
+  contain: layout paint;
 }
 
 .block {
   width: 100%;
   height: 100%;
-  background-color: #ff8015;
+  background-color: var(--active-block-color, #ff8015);
   opacity: 0;
   transition: opacity 520ms linear;
 }

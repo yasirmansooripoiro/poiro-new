@@ -215,8 +215,8 @@ function GalleryScene({
   transitionProgressRef,
   scrollLockDistance,
 }: Omit<InfiniteGalleryProps, "className" | "style">) {
-  const [scrollVelocity, setScrollVelocity] = useState(0);
-  const [autoPlay, setAutoPlay] = useState(true);
+  const scrollVelocityRef = useRef(0);
+  const autoPlayRef = useRef(true);
   const [hoveredPlaneIndex, setHoveredPlaneIndex] = useState<number | null>(
     null,
   );
@@ -272,6 +272,12 @@ function GalleryScene({
     () => Array.from({ length: visibleCount }, () => createClothMaterial()),
     [visibleCount],
   );
+
+  useEffect(() => {
+    return () => {
+      materials.forEach((material) => material.dispose());
+    };
+  }, [materials]);
 
   const spatialPositions = useMemo(() => {
     const positions: { x: number; y: number }[] = [];
@@ -345,8 +351,8 @@ function GalleryScene({
       if (!isLocked) return;
 
       event.preventDefault();
-      setScrollVelocity((prev) => prev + event.deltaY * 0.01 * speed);
-      setAutoPlay(false);
+      scrollVelocityRef.current += event.deltaY * 0.01 * speed;
+      autoPlayRef.current = false;
       lastInteraction.current = Date.now();
     },
     [speed, scrollLockDistance],
@@ -356,12 +362,12 @@ function GalleryScene({
   const handleKeyDown = useCallback(
     (event: KeyboardEvent) => {
       if (event.key === "ArrowUp" || event.key === "ArrowLeft") {
-        setScrollVelocity((prev) => prev - 2 * speed);
-        setAutoPlay(false);
+        scrollVelocityRef.current -= 2 * speed;
+        autoPlayRef.current = false;
         lastInteraction.current = Date.now();
       } else if (event.key === "ArrowDown" || event.key === "ArrowRight") {
-        setScrollVelocity((prev) => prev + 2 * speed);
-        setAutoPlay(false);
+        scrollVelocityRef.current += 2 * speed;
+        autoPlayRef.current = false;
         lastInteraction.current = Date.now();
       }
     },
@@ -400,7 +406,7 @@ function GalleryScene({
   useEffect(() => {
     const interval = setInterval(() => {
       if (Date.now() - lastInteraction.current > 3000) {
-        setAutoPlay(true);
+        autoPlayRef.current = true;
       }
     }, 1000);
     return () => clearInterval(interval);
@@ -408,26 +414,24 @@ function GalleryScene({
 
   useFrame((state, delta) => {
     const tp = transitionProgressRef?.current ?? 0;
+    let nextVelocity = scrollVelocityRef.current;
 
     // Apply auto-play (scaled by external speed ref) — freeze during transition
-    if (autoPlay && tp < 0.05) {
+    if (autoPlayRef.current && tp < 0.05) {
       const playSpeed = autoPlaySpeedRef?.current ?? 1;
-      setScrollVelocity((prev) => prev + 0.3 * delta * playSpeed);
+      nextVelocity += 0.3 * delta * playSpeed;
     }
 
     // Damping — kill velocity during transition
-    if (tp < 0.05) {
-      setScrollVelocity((prev) => prev * 0.95);
-    } else {
-      setScrollVelocity((prev) => prev * 0.8);
-    }
+    nextVelocity *= tp < 0.05 ? 0.95 : 0.8;
+    scrollVelocityRef.current = nextVelocity;
 
     // Update time uniform for all materials
     const time = state.clock.getElapsedTime();
     materials.forEach((material) => {
       if (material && material.uniforms) {
         material.uniforms.time.value = time;
-        material.uniforms.scrollForce.value = scrollVelocity;
+        material.uniforms.scrollForce.value = nextVelocity;
       }
     });
 
@@ -437,7 +441,7 @@ function GalleryScene({
     const totalRange = depthRange;
 
     planesData.current.forEach((plane, i) => {
-      let newZ = plane.z + scrollVelocity * delta * 10;
+      let newZ = plane.z + nextVelocity * delta * 10;
       let wrapsForward = 0;
       let wrapsBackward = 0;
 
@@ -718,7 +722,12 @@ export default function InfiniteGallery({
     <div className={className} style={style}>
       <Canvas
         camera={{ position: [0, 0, 0], fov: 55 }}
-        gl={{ antialias: true, alpha: true }}
+        dpr={[1, 1.5]}
+        gl={{
+          antialias: false,
+          alpha: true,
+          powerPreference: "high-performance",
+        }}
       >
         <GalleryScene
           images={images}
