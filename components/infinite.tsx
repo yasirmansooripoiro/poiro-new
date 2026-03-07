@@ -55,6 +55,14 @@ interface InfiniteGalleryProps {
   className?: string;
   /** Optional style for outer container */
   style?: React.CSSProperties;
+  /** Disable wheel/keyboard scroll control (for external scroll managers) */
+  disableWheelControl?: boolean;
+  /** External ref to control autoplay speed multiplier (0 = stopped, 1 = normal) */
+  autoPlaySpeedRef?: React.RefObject<number>;
+  /** External ref for transition progress (0 = gallery normal, 1 = one image centered). Controlled by scroll timeline. */
+  transitionProgressRef?: React.RefObject<number>;
+  /** Cumulative downward scroll (px) before the gallery releases scroll to the page (default: undefined = never release) */
+  scrollLockDistance?: number;
 }
 
 interface PlaneData {
@@ -202,6 +210,10 @@ function GalleryScene({
     blurOut: { start: 0.9, end: 1.0 },
     maxBlur: 3.0,
   },
+  disableWheelControl = false,
+  autoPlaySpeedRef,
+  transitionProgressRef,
+  scrollLockDistance,
 }: Omit<InfiniteGalleryProps, "className" | "style">) {
   const [scrollVelocity, setScrollVelocity] = useState(0);
   const [autoPlay, setAutoPlay] = useState(true);
@@ -210,6 +222,8 @@ function GalleryScene({
   );
   const lastInteraction = useRef(0);
   const meshRefs = useRef<Array<THREE.Mesh | null>>([]);
+  const selectedPlaneRef = useRef<number | null>(null);
+  const cumulativeScrollRef = useRef(0);
 
   useEffect(() => {
     lastInteraction.current = Date.now();
@@ -318,12 +332,24 @@ function GalleryScene({
   // Handle scroll input
   const handleWheel = useCallback(
     (event: WheelEvent) => {
+      // Track cumulative downward scroll toward the lock distance
+      if (scrollLockDistance != null && event.deltaY > 0) {
+        cumulativeScrollRef.current += event.deltaY;
+      }
+
+      // Once threshold is reached, let the page scroll naturally
+      const isLocked =
+        scrollLockDistance == null ||
+        cumulativeScrollRef.current < scrollLockDistance;
+
+      if (!isLocked) return;
+
       event.preventDefault();
       setScrollVelocity((prev) => prev + event.deltaY * 0.01 * speed);
       setAutoPlay(false);
       lastInteraction.current = Date.now();
     },
-    [speed],
+    [speed, scrollLockDistance],
   );
 
   // Handle keyboard input
@@ -343,6 +369,7 @@ function GalleryScene({
   );
 
   useEffect(() => {
+    if (disableWheelControl) return;
     const canvas = document.querySelector("canvas");
     if (canvas) {
       canvas.addEventListener("wheel", handleWheel, { passive: false });
@@ -353,7 +380,21 @@ function GalleryScene({
         document.removeEventListener("keydown", handleKeyDown);
       };
     }
-  }, [handleWheel, handleKeyDown]);
+  }, [handleWheel, handleKeyDown, disableWheelControl]);
+
+  // Re-engage scroll lock when user scrolls back to top
+  useEffect(() => {
+    if (scrollLockDistance == null) return;
+
+    const handlePageScroll = () => {
+      if (window.scrollY <= 10) {
+        cumulativeScrollRef.current = 0;
+      }
+    };
+
+    window.addEventListener("scroll", handlePageScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handlePageScroll);
+  }, [scrollLockDistance]);
 
   // Auto-play logic
   useEffect(() => {
@@ -366,13 +407,20 @@ function GalleryScene({
   }, []);
 
   useFrame((state, delta) => {
-    // Apply auto-play
-    if (autoPlay) {
-      setScrollVelocity((prev) => prev + 0.3 * delta);
+    const tp = transitionProgressRef?.current ?? 0;
+
+    // Apply auto-play (scaled by external speed ref) — freeze during transition
+    if (autoPlay && tp < 0.05) {
+      const playSpeed = autoPlaySpeedRef?.current ?? 1;
+      setScrollVelocity((prev) => prev + 0.3 * delta * playSpeed);
     }
 
-    // Damping
-    setScrollVelocity((prev) => prev * 0.95);
+    // Damping — kill velocity during transition
+    if (tp < 0.05) {
+      setScrollVelocity((prev) => prev * 0.95);
+    } else {
+      setScrollVelocity((prev) => prev * 0.8);
+    }
 
     // Update time uniform for all materials
     const time = state.clock.getElapsedTime();
@@ -512,6 +560,56 @@ function GalleryScene({
         }
       }
     });
+
+    // Transition: one image moves to center, others fade out
+    if (tp > 0) {
+      // Lock selection on first transition frame
+      if (selectedPlaneRef.current === null) {
+        let bestIdx = 0;
+        let minDist = Infinity;
+        planesData.current.forEach((plane, idx) => {
+          const wz = plane.z - totalRange / 2;
+          // Pick the plane closest to the camera (smallest absolute z that is in front)
+          const dist = Math.abs(wz);
+          if (dist < minDist) {
+            minDist = dist;
+            bestIdx = idx;
+          }
+        });
+        selectedPlaneRef.current = bestIdx;
+      }
+
+      const si = selectedPlaneRef.current;
+
+      planesData.current.forEach((_, i) => {
+        const mesh = meshRefs.current[i];
+        const material = materials[i];
+        if (!mesh || !material?.uniforms) return;
+
+        if (i === si) {
+          // Animate selected plane to center of view
+          mesh.position.x = THREE.MathUtils.lerp(mesh.position.x, 0, tp);
+          mesh.position.y = THREE.MathUtils.lerp(mesh.position.y, 0, tp);
+          mesh.position.z = THREE.MathUtils.lerp(mesh.position.z, -6, tp);
+          material.uniforms.opacity.value = 1;
+          material.uniforms.blurAmount.value = 0;
+          // Scale up slightly for emphasis
+          const sx = mesh.scale.x;
+          const sy = mesh.scale.y;
+          mesh.scale.set(
+            THREE.MathUtils.lerp(sx, sx * 1.15, tp * 0.1),
+            THREE.MathUtils.lerp(sy, sy * 1.15, tp * 0.1),
+            1,
+          );
+        } else {
+          // Fade out all other planes
+          material.uniforms.opacity.value *= 1 - tp;
+        }
+      });
+    } else {
+      // Reset selection when transition is inactive
+      selectedPlaneRef.current = null;
+    }
   });
 
   if (normalizedImages.length === 0) return null;
@@ -575,8 +673,14 @@ function FallbackGallery({ images }: { images: ImageItem[] }) {
 
 export default function InfiniteGallery({
   images,
+  speed,
+  visibleCount,
   className = "h-96 w-full",
   style,
+  disableWheelControl,
+  autoPlaySpeedRef,
+  transitionProgressRef,
+  scrollLockDistance,
   fadeSettings = {
     fadeIn: { start: 0.05, end: 0.25 },
     fadeOut: { start: 0.4, end: 0.43 },
@@ -618,8 +722,14 @@ export default function InfiniteGallery({
       >
         <GalleryScene
           images={images}
+          speed={speed}
+          visibleCount={visibleCount}
           fadeSettings={fadeSettings}
           blurSettings={blurSettings}
+          disableWheelControl={disableWheelControl}
+          autoPlaySpeedRef={autoPlaySpeedRef}
+          transitionProgressRef={transitionProgressRef}
+          scrollLockDistance={scrollLockDistance}
         />
       </Canvas>
     </div>
