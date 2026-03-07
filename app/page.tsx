@@ -1,5 +1,6 @@
 import InfiniteGallery from "@/components/infinite";
 import OurWorkSection from "@/components/our-work";
+import { WorksGallery } from "@/components/works-gallery";
 import cards from "@/data/cards";
 
 export default function Home() {
@@ -32,14 +33,7 @@ export default function Home() {
       <OurWorkSection />
 
       {/* section : About */}
-      <section className="min-h-screen py-20 bg-background">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold mb-8">About</h2>
-          <p className="text-gray-600 text-lg max-w-2xl">
-            Placeholder content for the about section.
-          </p>
-        </div>
-      </section>
+      <WorksGallery />
 
       {/* section : Contact */}
       <section className="min-h-screen py-20 bg-background">
