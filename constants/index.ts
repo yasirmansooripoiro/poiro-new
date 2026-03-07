@@ -1,0 +1,2 @@
+export const HARD_CODED_COLUMNS = 48;
+export const HARD_CODED_BLOCKS_PER_COLUMN = 90;
