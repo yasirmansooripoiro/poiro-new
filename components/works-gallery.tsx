@@ -7,53 +7,53 @@ import { VideoCard } from "./video-card";
 const projects = [
   {
     id: 1,
-    title: "FASHION STUDIO",
-    category: "BRANDING",
+    title: "SHORT FORM",
+    category: "TIKTOK/REELS",
     year: "2024",
     thumbnail:
-      "https://images.unsplash.com/photo-1769950268368-f927c5cab379?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4ODk3MjF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NzI4NzUyMDF8&ixlib=rb-4.1.0&q=85",
+      "https://res.cloudinary.com/dl20l7ldt/image/upload/v1772913913/anycript_thumbnail_3_dodxf0.png",
     video:
-      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+      "https://res.cloudinary.com/dl20l7ldt/video/upload/v1772912829/SHORT-FORM_kxpkcm.mp4",
   },
   {
     id: 2,
-    title: "ARCHITECTURE FIRM",
-    category: "DESIGN",
+    title: "STATICS",
+    category: "CAMPAIGN-READY CREATIVES",
     year: "2024",
     thumbnail:
-      "https://images.unsplash.com/photo-1772339014113-29414e7295b3?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4ODk3MjF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NzI4NzUyMDB8&ixlib=rb-4.1.0&q=85",
-    video:
-      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
+      "https://res.cloudinary.com/dl20l7ldt/image/upload/v1772913347/3_gs18zp.png",
+    image:
+      "https://res.cloudinary.com/dl20l7ldt/image/upload/v1772913343/1_rfmf4p.png",
   },
   {
     id: 3,
-    title: "PRODUCT LAUNCH",
-    category: "CREATIVE",
+    title: "UGC/AFFILIATE",
+    category: "INFLUENCER COLLABORATIONS",
     year: "2024",
     thumbnail:
-      "https://images.unsplash.com/photo-1769881846576-959f7e84ce32?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4ODk3MjF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NzI4NzUyMDB8&ixlib=rb-4.1.0&q=85",
+      "https://res.cloudinary.com/dl20l7ldt/image/upload/v1772913847/anycript_thumbnail_2_tm7mtq.png",
     video:
-      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
+      "https://res.cloudinary.com/dl20l7ldt/video/upload/v1772912830/UGC_cgexw1.mp4",
   },
   {
     id: 4,
-    title: "STUDIO VALE",
-    category: "MARKETING",
+    title: "MICRO DRAMA",
+    category: "SOCIAL-FIRST NARRATIVES",
     year: "2024",
     thumbnail:
-      "https://images.unsplash.com/photo-1771787616811-7ae7a73a31de?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4ODk3MjF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NzI4NzUyMDB8&ixlib=rb-4.1.0&q=85",
+      "https://res.cloudinary.com/dl20l7ldt/image/upload/v1772915463/anycript_thumbnail_5_ntzuyd.png",
     video:
-      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4",
+      "https://res.cloudinary.com/dl20l7ldt/video/upload/v1772915427/ascii-art_1_pxwmyo.mp4",
   },
   {
     id: 5,
-    title: "AUTOMOTIVE",
-    category: "COMMERCIAL",
+    title: "TVC/ANIMATICS",
+    category: "PRODUCTION GRADE COMMERCIALS",
     year: "2024",
     thumbnail:
-      "https://images.unsplash.com/photo-1772606270537-6eb199b55aed?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4ODk3MjF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NzI4NzUyMDB8&ixlib=rb-4.1.0&q=85",
+      "https://res.cloudinary.com/dl20l7ldt/image/upload/v1772913915/anycript_thumbnail_4_u2pgua.png",
     video:
-      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4",
+      "https://res.cloudinary.com/dl20l7ldt/video/upload/v1772912827/TVC_u0s1zj.mp4",
   },
 ];
 

@@ -41,7 +41,7 @@ export function CustomCursor({ isActive }: CustomCursorProps) {
       ref={cursorRef}
       className={cn(
         "fixed top-0 left-0 w-6 h-6 rounded-full pointer-events-none z-9999 transition-opacity duration-200",
-        "bg-white/80 shadow-lg shadow-white/20 will-change-transform",
+        "bg-[#ff8015] shadow-lg shadow-white/20 will-change-transform",
         isActive ? "opacity-100" : "opacity-0",
       )}
       style={{

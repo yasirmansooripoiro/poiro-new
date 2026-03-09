@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeInitializer } from "@/inits/theme-initializer";
-import BlocksOverlay from "@/components/blocks-overlay";
 import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 import { GeistPixelSquare } from "geist/font/pixel";
@@ -25,7 +24,7 @@ export default function RootLayout({
         className={`${GeistSans.variable} ${GeistMono.variable} antialiased`}
       >
         <ThemeInitializer />
-        <BlocksOverlay />
+        {/* <BlocksOverlay /> */}
         <div className="relative z-10">{children}</div>
       </body>
     </html>

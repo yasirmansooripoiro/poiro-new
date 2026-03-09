@@ -10,7 +10,8 @@ interface Project {
   category: string;
   year: string;
   thumbnail: string;
-  video: string;
+  video?: string;
+  image?: string;
 }
 
 interface VideoCardProps {
@@ -78,17 +79,31 @@ export function VideoCard({
           isHovered ? "opacity-100" : "opacity-0",
         )}
       >
-        <video
-          ref={videoRef}
-          className="w-full h-full object-cover"
-          loop
-          muted
-          playsInline
-          preload="auto"
-          onLoadedData={() => setIsVideoLoaded(true)}
-        >
-          <source src={project.video} type="video/mp4" />
-        </video>
+        {project.video && (
+          <video
+            ref={videoRef}
+            className="w-full h-full object-cover"
+            loop
+            // muted
+            playsInline
+            preload="auto"
+            onLoadedData={() => setIsVideoLoaded(true)}
+          >
+            <source src={project.video} type="video/mp4" />
+          </video>
+        )}
+
+        {/* Fallback Image */}
+        {project.image && (
+          <Image
+            src={project.image}
+            alt={project.title}
+            className="w-full h-full object-cover"
+            width={400}
+            height={600}
+            priority
+          />
+        )}
       </div>
 
       <div
@@ -114,11 +129,11 @@ export function VideoCard({
             <p className="text-white/80 font-mono text-xs tracking-[0.25em] uppercase leading-relaxed">
               {project.category}
             </p>
-            <div className="pt-3 mt-3 border-t border-white/10">
+            {/* <div className="pt-3 mt-3 border-t border-white/10">
               <p className="text-white/60 font-mono text-xs tracking-widest">
                 {project.year}
               </p>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

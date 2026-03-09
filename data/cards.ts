@@ -1,242 +1,175 @@
-const cards = [
+const imageUrls = [
+  "https://res.cloudinary.com/dl20l7ldt/image/upload/v1772915408/G9M5kGGcrYgntW6CI3gO9_xlgglf.jpg",
+  "https://res.cloudinary.com/dl20l7ldt/image/upload/v1772915402/xURS24fHvVc5qPcs6m6nl_je0gmz.jpg",
+  "https://res.cloudinary.com/dl20l7ldt/image/upload/v1772915389/G6jsZ5jmTZtFLqOxS06yJ_zl4qq1.jpg",
+  "https://res.cloudinary.com/dl20l7ldt/image/upload/v1772915362/foramour_usecase2_image_1_ekdtug.png",
+  "https://res.cloudinary.com/dl20l7ldt/image/upload/v1772915355/FGZuTMtzSoVoUt0P2HkeA_yvz6rv.png",
+  "https://res.cloudinary.com/dl20l7ldt/image/upload/v1772915347/bgtredtyujnbgtrd_ehwtsd.png",
+  "https://res.cloudinary.com/dl20l7ldt/image/upload/v1772915343/ayXHurEuA6ACIKo5C4eME_teypqz.png",
+  "https://res.cloudinary.com/dl20l7ldt/image/upload/v1772915317/3rGn7s5-ie_geyogA7QZ__e3auxa.png",
+  "https://res.cloudinary.com/dl20l7ldt/image/upload/v1772915309/KoFPteqCNqcPgp2_xyDgF_zaba5i.jpg",
+  "https://res.cloudinary.com/dl20l7ldt/image/upload/v1772915293/LtobJ7cRiZ4sRikjj8sko_ijl1un.jpg",
+  "https://res.cloudinary.com/dl20l7ldt/image/upload/v1772915288/h8zcddhu3YuIMKemwte10_egn66g.jpg",
+  "https://res.cloudinary.com/dl20l7ldt/image/upload/v1772915280/G8j17S7RGvli33gjyUbgW_oug3c7.jpg",
+  "https://res.cloudinary.com/dl20l7ldt/image/upload/v1772915271/2fsewbnCQRaCt06Q_ht1m4n.jpg",
+  "https://res.cloudinary.com/dl20l7ldt/image/upload/v1772915234/HGsJVqazNRqVkQikzFTkK_cvn7mk.png",
+  "https://res.cloudinary.com/dl20l7ldt/image/upload/v1772915229/suXae2KUXO_XiA0v4hTX7_dttrsw.png",
+  "https://res.cloudinary.com/dl20l7ldt/image/upload/v1772915198/hb_set_4.2_tt63he.png",
+  "https://res.cloudinary.com/dl20l7ldt/image/upload/v1772915194/hb_set_1_zzus9r.jpg",
+  "https://res.cloudinary.com/dl20l7ldt/image/upload/v1772915188/95928170061b4b37a705f76d7565a531_gdxpna.png",
+  "https://res.cloudinary.com/dl20l7ldt/image/upload/v1772915182/3e1f5281afd84dd790cd1614fc94b09b_kl9gxq.png",
+  "https://res.cloudinary.com/dl20l7ldt/image/upload/v1772915166/zwWBWUBrHdaUFcW3sfQ5a_c3zz7m.jpg",
+  "https://res.cloudinary.com/dl20l7ldt/image/upload/v1772915151/zHAY6gubTmViYgWJSmTWH_y1s2am.jpg",
+  "https://res.cloudinary.com/dl20l7ldt/image/upload/v1772915140/2XS3Nv0nG9QL_eBvWmHPf_oor5uv.jpg",
+  "https://res.cloudinary.com/dl20l7ldt/image/upload/v1772915121/wmGlpedVp3K3di_yT-4qP_qxcqnt.png",
+  "https://res.cloudinary.com/dl20l7ldt/image/upload/v1772915115/vfr43e567uhbvcfr4evfde45_z8czll.png",
+  "https://res.cloudinary.com/dl20l7ldt/image/upload/v1772915107/nbvfr43wst78iuhgfdertyhj_b70b1458_abotga.png",
+  "https://res.cloudinary.com/dl20l7ldt/image/upload/v1772915102/kxZDuVpINJlhCFQC_v5mM_2e881b34_msr6e6.jpg",
+  "https://res.cloudinary.com/dl20l7ldt/image/upload/v1772915095/di60p4zKUETub3pyxwhPg_9178ec4f_flcak9.jpg",
+  "https://res.cloudinary.com/dl20l7ldt/image/upload/v1772915081/YLW0vd0_CCBRUKm4iok8B_rlpg6c.jpg",
+  "https://res.cloudinary.com/dl20l7ldt/image/upload/v1772915059/f857G_czZ6ltNKmqDeU0V_hvaqul.jpg",
+  "https://res.cloudinary.com/dl20l7ldt/image/upload/v1772915039/xpZYAmS627cE0I7Hx6WIA_uyft95.jpg",
+] as const;
+
+const baseCards = [
   {
-    image:
-      "https://images.unsplash.com/photo-1770983438085-f840f1a72504?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4ODk3MjF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NzI4NzUxOTZ8&ixlib=rb-4.1.0&q=85",
     initial: { x: 0, y: 0, opacity: 0, scale: 0.75 },
     descending: { x: 0, y: 250, opacity: 1, scale: 0.95 },
-    exploded: {
-      x: -3200 + (Math.random() * 400 - 200),
-      y: -280,
-      opacity: 1,
-      scale: 0.85,
-      rotation: 0,
-    },
-    row: { x: -3200, y: 380, opacity: 1, scale: 1, rotation: 0 },
+    exploded: { x: -3200, y: -280, scale: 0.85 },
+    rowX: -3200,
   },
   {
-    image:
-      "https://images.unsplash.com/photo-1768740067016-d7fddac028d6?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4ODk3MjF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NzI4NzUxOTZ8&ixlib=rb-4.1.0&q=85",
     initial: { x: 0, y: 0, opacity: 0, scale: 0.8 },
     descending: { x: 0, y: 250, opacity: 1, scale: 0.9 },
-    exploded: {
-      x: -2800 + (Math.random() * 400 - 200),
-      y: -200,
-      opacity: 1,
-      scale: 0.9,
-      rotation: 0,
-    },
-    row: { x: -2800, y: 380, opacity: 1, scale: 1, rotation: 0 },
+    exploded: { x: -2800, y: -200, scale: 0.9 },
+    rowX: -2800,
   },
   {
-    image:
-      "https://images.unsplash.com/photo-1771030668566-dc2e0f24c95e?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4ODk3MjF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NzI4NzUxOTZ8&ixlib=rb-4.1.0&q=85",
     initial: { x: 0, y: 0, opacity: 0, scale: 0.85 },
     descending: { x: 0, y: 250, opacity: 1, scale: 0.88 },
-    exploded: {
-      x: -2400 + (Math.random() * 400 - 200),
-      y: -150,
-      opacity: 1,
-      scale: 0.95,
-      rotation: 0,
-    },
-    row: { x: -2400, y: 380, opacity: 1, scale: 1, rotation: 0 },
+    exploded: { x: -2400, y: -150, scale: 0.95 },
+    rowX: -2400,
   },
   {
-    image:
-      "https://images.unsplash.com/photo-1770929356906-765cd4e21dd1?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4ODk3MjF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NzI4NzUxOTd8&ixlib=rb-4.1.0&q=85",
     initial: { x: 0, y: 0, opacity: 0, scale: 0.8 },
     descending: { x: 0, y: 250, opacity: 1, scale: 0.85 },
-    exploded: {
-      x: -2000 + (Math.random() * 400 - 200),
-      y: -100,
-      opacity: 1,
-      scale: 1.1,
-      rotation: 0,
-    },
-    row: { x: -2000, y: 380, opacity: 1, scale: 1, rotation: 0 },
+    exploded: { x: -2000, y: -100, scale: 1.1 },
+    rowX: -2000,
   },
   {
-    image:
-      "https://images.unsplash.com/photo-1771251004016-d879327b33c2?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4ODk3MjF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NzI4NzUxOTd8&ixlib=rb-4.1.0&q=85",
     initial: { x: 0, y: 0, opacity: 0, scale: 0.78 },
     descending: { x: 0, y: 250, opacity: 1, scale: 0.82 },
-    exploded: {
-      x: -1600 + (Math.random() * 400 - 200),
-      y: -120,
-      opacity: 1,
-      scale: 0.92,
-      rotation: 0,
-    },
-    row: { x: -1600, y: 380, opacity: 1, scale: 1, rotation: 0 },
+    exploded: { x: -1600, y: -120, scale: 0.92 },
+    rowX: -1600,
   },
   {
-    image:
-      "https://images.unsplash.com/photo-1772173333598-31ffc020d58a?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4ODk3MjF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NzI4NzUxOTd8&ixlib=rb-4.1.0&q=85",
     initial: { x: 0, y: 0, opacity: 0, scale: 0.82 },
     descending: { x: 0, y: 250, opacity: 1, scale: 0.8 },
-    exploded: {
-      x: -1200 + (Math.random() * 400 - 200),
-      y: -180,
-      opacity: 1,
-      scale: 0.9,
-      rotation: 0,
-    },
-    row: { x: -1200, y: 380, opacity: 1, scale: 1, rotation: 0 },
+    exploded: { x: -1200, y: -180, scale: 0.9 },
+    rowX: -1200,
   },
   {
-    image:
-      "https://images.unsplash.com/photo-1770562525481-e7a3eae66492?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4ODk3MjF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NzI4NzUxOTd8&ixlib=rb-4.1.0&q=85",
     initial: { x: 0, y: 0, opacity: 0, scale: 0.8 },
     descending: { x: 0, y: 250, opacity: 1, scale: 0.78 },
-    exploded: {
-      x: -800 + (Math.random() * 400 - 200),
-      y: -240,
-      opacity: 1,
-      scale: 0.88,
-      rotation: 0,
-    },
-    row: { x: -800, y: 380, opacity: 1, scale: 1, rotation: 0 },
+    exploded: { x: -800, y: -240, scale: 0.88 },
+    rowX: -800,
   },
   {
-    image:
-      "https://images.unsplash.com/photo-1770034849260-2e67f8f423a0?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4ODk3MjF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NzI4NzUxOTh8&ixlib=rb-4.1.0&q=85",
     initial: { x: 0, y: 0, opacity: 0, scale: 0.8 },
     descending: { x: 0, y: 250, opacity: 1, scale: 0.72 },
-    exploded: {
-      x: -400 + (Math.random() * 400 - 200),
-      y: 50,
-      opacity: 1,
-      scale: 0.83,
-      rotation: 0,
-    },
-    row: { x: -400, y: 380, opacity: 1, scale: 1, rotation: 0 },
+    exploded: { x: -400, y: 50, scale: 0.83 },
+    rowX: -400,
   },
   {
-    image:
-      "https://images.unsplash.com/photo-1770647109112-62553107e44a?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4ODk3MjF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NzI4NzUxOTh8&ixlib=rb-4.1.0&q=85",
     initial: { x: 0, y: 0, opacity: 0, scale: 0.7 },
     descending: { x: 0, y: 250, opacity: 1, scale: 0.68 },
-    exploded: {
-      x: 0 + (Math.random() * 400 - 200),
-      y: -100,
-      opacity: 1,
-      scale: 0.82,
-      rotation: 0,
-    },
-    row: { x: 0, y: 380, opacity: 1, scale: 1, rotation: 0 },
+    exploded: { x: 0, y: -100, scale: 0.82 },
+    rowX: 0,
   },
   {
-    image:
-      "https://images.unsplash.com/photo-1771681278446-6f8eb0c7323f?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4ODk3MjF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NzI4NzUxOTh8&ixlib=rb-4.1.0&q=85",
     initial: { x: 0, y: 0, opacity: 0, scale: 0.8 },
     descending: { x: 0, y: 250, opacity: 1, scale: 0.65 },
-    exploded: {
-      x: 400 + (Math.random() * 400 - 200),
-      y: -60,
-      opacity: 1,
-      scale: 0.8,
-      rotation: 0,
-    },
-    row: { x: 400, y: 380, opacity: 1, scale: 1, rotation: 0 },
+    exploded: { x: 400, y: -60, scale: 0.8 },
+    rowX: 400,
   },
   {
-    image:
-      "https://images.unsplash.com/photo-1770752609290-264c53dc54a3?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4ODk3MjF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NzI4NzUxOTl8&ixlib=rb-4.1.0&q=85",
     initial: { x: 0, y: 0, opacity: 0, scale: 0.72 },
     descending: { x: 0, y: 250, opacity: 1, scale: 0.5 },
-    exploded: {
-      x: 800 + (Math.random() * 400 - 200),
-      y: 200,
-      opacity: 1,
-      scale: 0.78,
-      rotation: 0,
-    },
-    row: { x: 800, y: 380, opacity: 1, scale: 1, rotation: 0 },
+    exploded: { x: 800, y: 200, scale: 0.78 },
+    rowX: 800,
   },
   {
-    image:
-      "https://images.unsplash.com/photo-1771009469341-576c828b7691?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4ODk3MjF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NzI4NzUxOTl8&ixlib=rb-4.1.0&q=85",
     initial: { x: 0, y: 0, opacity: 0, scale: 0.74 },
     descending: { x: 0, y: 250, opacity: 1, scale: 0.6 },
-    exploded: {
-      x: 1200 + (Math.random() * 400 - 200),
-      y: 150,
-      opacity: 1,
-      scale: 0.88,
-      rotation: 0,
-    },
-    row: { x: 1200, y: 380, opacity: 1, scale: 1, rotation: 0 },
+    exploded: { x: 1200, y: 150, scale: 0.88 },
+    rowX: 1200,
   },
   {
-    image:
-      "https://images.unsplash.com/photo-1772606270537-6eb199b55aed?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4ODk3MjF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NzI4NzUyMDB8&ixlib=rb-4.1.0&q=85",
     initial: { x: 0, y: 0, opacity: 0, scale: 0.8 },
     descending: { x: 0, y: 250, opacity: 1, scale: 0.58 },
-    exploded: {
-      x: 1600 + (Math.random() * 400 - 200),
-      y: -120,
-      opacity: 1,
-      scale: 0.82,
-      rotation: 0,
-    },
-    row: { x: 1600, y: 380, opacity: 1, scale: 1, rotation: 0 },
+    exploded: { x: 1600, y: -120, scale: 0.82 },
+    rowX: 1600,
   },
   {
-    image:
-      "https://images.unsplash.com/photo-1771787616811-7ae7a73a31de?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4ODk3MjF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NzI4NzUyMDB8&ixlib=rb-4.1.0&q=85",
     initial: { x: 0, y: 0, opacity: 0, scale: 0.8 },
     descending: { x: 0, y: 250, opacity: 1, scale: 0.52 },
-    exploded: {
-      x: 2000 + (Math.random() * 400 - 200),
-      y: 180,
-      opacity: 1,
-      scale: 0.8,
-      rotation: 0,
-    },
-    row: { x: 2000, y: 380, opacity: 1, scale: 1, rotation: 0 },
+    exploded: { x: 2000, y: 180, scale: 0.8 },
+    rowX: 2000,
   },
   {
-    image:
-      "https://images.unsplash.com/photo-1769881846576-959f7e84ce32?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4ODk3MjF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NzI4NzUyMDB8&ixlib=rb-4.1.0&q=85",
     initial: { x: 0, y: 0, opacity: 0, scale: 0.72 },
     descending: { x: 0, y: 250, opacity: 1, scale: 0.5 },
-    exploded: {
-      x: 2400 + (Math.random() * 400 - 200),
-      y: 100,
-      opacity: 1,
-      scale: 0.86,
-      rotation: 0,
-    },
-    row: { x: 2400, y: 380, opacity: 1, scale: 1, rotation: 0 },
+    exploded: { x: 2400, y: 100, scale: 0.86 },
+    rowX: 2400,
   },
   {
-    image:
-      "https://images.unsplash.com/photo-1772339014113-29414e7295b3?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4ODk3MjF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NzI4NzUyMDB8&ixlib=rb-4.1.0&q=85",
     initial: { x: 0, y: 0, opacity: 0, scale: 0.8 },
     descending: { x: 0, y: 250, opacity: 1, scale: 0.48 },
-    exploded: {
-      x: 2800 + (Math.random() * 400 - 200),
-      y: 140,
-      opacity: 1,
-      scale: 0.84,
-      rotation: 0,
-    },
-    row: { x: 2800, y: 380, opacity: 1, scale: 1, rotation: 0 },
+    exploded: { x: 2800, y: 140, scale: 0.84 },
+    rowX: 2800,
   },
   {
-    image:
-      "https://images.unsplash.com/photo-1769950268368-f927c5cab379?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4ODk3MjF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NzI4NzUyMDF8&ixlib=rb-4.1.0&q=85",
     initial: { x: 0, y: 0, opacity: 0, scale: 0.68 },
     descending: { x: 0, y: 250, opacity: 1, scale: 0.46 },
+    exploded: { x: 3200, y: 200, scale: 0.82 },
+    rowX: 3200,
+  },
+] as const;
+
+const extraCardsCount = imageUrls.length - baseCards.length;
+
+const extraCards = Array.from(
+  { length: Math.max(0, extraCardsCount) },
+  (_, index) => {
+    const x = baseCards[baseCards.length - 1].rowX + (index + 1) * 400;
+
+    return {
+      initial: { x: 0, y: 0, opacity: 0, scale: 0.68 },
+      descending: { x: 0, y: 250, opacity: 1, scale: 0.46 },
+      exploded: { x, y: 200, scale: 0.82 },
+      rowX: x,
+    };
+  },
+);
+
+const motionCards = [...baseCards, ...extraCards];
+
+const cards = imageUrls.map((image, index) => {
+  const motion = motionCards[index];
+
+  return {
+    image,
+    initial: { ...motion.initial },
+    descending: { ...motion.descending },
     exploded: {
-      x: 3200 + (Math.random() * 400 - 200),
-      y: 200,
+      x: motion.exploded.x + (Math.random() * 400 - 200),
+      y: motion.exploded.y,
       opacity: 1,
-      scale: 0.82,
+      scale: motion.exploded.scale,
       rotation: 0,
     },
-    row: { x: 3200, y: 380, opacity: 1, scale: 1, rotation: 0 },
-  },
-];
+    row: { x: motion.rowX, y: 380, opacity: 1, scale: 1, rotation: 0 },
+  };
+});
 
 export default cards;
