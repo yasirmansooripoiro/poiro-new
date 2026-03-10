@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import {
   IconBrandGithub,
+  IconBrandInstagram,
+  IconBrandLinkedin,
   IconBrandX,
   IconExchange,
   IconHome,
@@ -45,41 +47,13 @@ export function FloatingDockDemo() {
       ),
       href: "#",
     },
-
     {
-      title: "Products",
+      title: "LinkedIn",
       icon: (
-        <IconTerminal2 className="h-full w-full text-neutral-500 dark:text-neutral-300" />
+        <IconBrandLinkedin className="h-full w-full text-neutral-500 dark:text-neutral-300" />
       ),
       href: "#",
     },
-    {
-      title: "Components",
-      icon: (
-        <IconNewSection className="h-full w-full text-neutral-500 dark:text-neutral-300" />
-      ),
-      href: "#",
-    },
-    {
-      title: "Aceternity UI",
-      icon: (
-        <Image
-          src="https://assets.aceternity.com/logo-dark.png"
-          width={20}
-          height={20}
-          alt="Aceternity Logo"
-        />
-      ),
-      href: "#",
-    },
-    {
-      title: "Changelog",
-      icon: (
-        <IconExchange className="h-full w-full text-neutral-500 dark:text-neutral-300" />
-      ),
-      href: "#",
-    },
-
     {
       title: "Twitter",
       icon: (
@@ -88,9 +62,9 @@ export function FloatingDockDemo() {
       href: "#",
     },
     {
-      title: "GitHub",
+      title: "Instagram",
       icon: (
-        <IconBrandGithub className="h-full w-full text-neutral-500 dark:text-neutral-300" />
+        <IconBrandInstagram className="h-full w-full text-neutral-500 dark:text-neutral-300" />
       ),
       href: "#",
     },

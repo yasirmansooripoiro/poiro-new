@@ -5,6 +5,7 @@ import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 import { GeistPixelSquare } from "geist/font/pixel";
 import PixelTrail from "@/components/pixel-trail";
+import SmoothScrollProvider from "@/components/smooth-scroll-provider";
 // import MouseMoveEffect from "@/components/move-mosue-effect";
 
 export const metadata: Metadata = {
@@ -39,11 +40,13 @@ export default function RootLayout({
       <body
         className={`${GeistSans.variable} ${GeistMono.variable} antialiased`}
       >
-        <ThemeInitializer />
-        {/* <MouseMoveEffect /> */}
-        <PixelTrail />
-        {/* <BlocksOverlay /> */}
-        <div className="relative z-10">{children}</div>
+        <SmoothScrollProvider>
+          <ThemeInitializer />
+          {/* <MouseMoveEffect /> */}
+          <PixelTrail />
+          {/* <BlocksOverlay /> */}
+          <div className="relative z-10">{children}</div>
+        </SmoothScrollProvider>
       </body>
     </html>
   );
