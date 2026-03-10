@@ -41,7 +41,7 @@ export function CtaSection() {
       ref={sectionRef}
     >
       <video
-        className="pointer-events-none absolute inset-0 -z-20 h-full w-full object-cover"
+        className="pointer-events-none absolute inset-0 -z-50 h-full w-full object-cover"
         loop
         muted
         playsInline

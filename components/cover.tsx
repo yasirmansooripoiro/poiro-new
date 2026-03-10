@@ -96,7 +96,7 @@ export const Cover = ({
                 maxSize={1}
                 particleDensity={500}
                 className="w-full h-full"
-                particleColor="#FFFFFF"
+                particleColor="#ff8015"
               />
               <SparklesCore
                 background="transparent"
@@ -104,7 +104,7 @@ export const Cover = ({
                 maxSize={1}
                 particleDensity={500}
                 className="w-full h-full"
-                particleColor="#FFFFFF"
+                particleColor="#ff8015"
               />
             </motion.div>
           </motion.div>
@@ -249,7 +249,7 @@ export const CircleIcon = ({
         animationDelay: `${delay ?? 0}s`,
       }}
       className={cn(
-        `pointer-events-none animate-pulse group-hover/cover:hidden group-hover/cover:opacity-100 group h-2 w-2 rounded-full bg-neutral-600 dark:bg-white opacity-20 group-hover/cover:bg-white`,
+        `pointer-events-none animate-pulse group-hover/cover:hidden group-hover/cover:opacity-100 group h-2 w-2 rounded-full bg-[#ff8015] dark:bg-[#ff8015]`,
         className,
       )}
     ></div>

@@ -62,10 +62,12 @@ export function VideoCard({
         <Image
           src={project.thumbnail || "/placeholder.svg"}
           alt={project.title}
-          className={cn(
-            "w-full h-full object-cover transition-all duration-700",
-            !isHovered && "grayscale brightness-75",
-          )}
+          className="w-full h-full object-cover transition-all duration-700"
+          style={
+            !isHovered
+              ? { filter: "grayscale(100%) sepia(15%) hue-rotate(15deg)" }
+              : undefined
+          }
           width={400}
           height={600}
           priority
@@ -109,7 +111,7 @@ export function VideoCard({
       <div
         className={cn(
           "absolute bottom-0 left-0 right-0 p-8",
-          "transition-all duration-700",
+          "transition-opacity duration-300",
           isHovered ? "opacity-100" : "opacity-0 pointer-events-none",
         )}
       >
@@ -118,12 +120,12 @@ export function VideoCard({
           className={cn(
             "relative backdrop-blur-xl bg-black/20 rounded-2xl p-6 border border-white/10",
             "shadow-2xl",
-            "transition-all duration-700 ease-out",
-            isHovered ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0",
+            "transition-all duration-300 ease-out will-change-transform",
+            isHovered ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0",
           )}
         >
           <div className="space-y-1 text-left">
-            <h3 className="text-white font-mono text-sm tracking-[0.3em] uppercase font-medium leading-relaxed">
+            <h3 className="text-[#ff8015] font-mono text-sm tracking-[0.3em] uppercase font-medium leading-relaxed">
               {project.title}
             </h3>
             <p className="text-white/80 font-mono text-xs tracking-[0.25em] uppercase leading-relaxed">

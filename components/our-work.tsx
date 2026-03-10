@@ -59,9 +59,21 @@ const images: ImageItem[] = [
   },
 ];
 
+const imageRevealTargets: Record<
+  string,
+  { x: number; y: number; rotation: number; delay: number }
+> = {
+  "left-1": { x: -14, y: -18, rotation: -6, delay: 0 },
+  "right-1": { x: 14, y: -18, rotation: 6, delay: 0.06 },
+  "left-2": { x: 10, y: -8, rotation: -3, delay: 0.12 },
+  "right-2": { x: -8, y: -10, rotation: 3, delay: 0.18 },
+  "left-3": { x: -6, y: 12, rotation: -5, delay: 0.24 },
+  "right-3": { x: 8, y: 12, rotation: 4, delay: 0.3 },
+  "center-1": { x: 0, y: 22, rotation: 1, delay: 0.22 },
+};
+
 const OurWorkSection = () => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const textWrapperRef = useRef<HTMLDivElement>(null);
   const imageRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
@@ -73,44 +85,84 @@ const OurWorkSection = () => {
 
     const ctx = gsap.context(() => {
       if (prefersReducedMotion) {
-        imageRefs.current.forEach((element) => {
+        images.forEach((image, idx) => {
+          const element = imageRefs.current[idx];
           if (element) {
-            gsap.set(element, { y: 0, opacity: 1 });
+            const target = imageRevealTargets[image.id] ?? {
+              x: 0,
+              y: 0,
+              rotation: 0,
+            };
+            gsap.set(element, {
+              x: target.x,
+              y: target.y,
+              rotation: target.rotation,
+              scale: 1,
+              opacity: 1,
+              filter: "blur(0px)",
+              clipPath: "inset(0% 0% 0% 0% round 1rem)",
+            });
           }
         });
         return;
       }
 
+      const revealTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top 82%",
+          end: "bottom 28%",
+          scrub: 1,
+          invalidateOnRefresh: true,
+        },
+      });
+
       images.forEach((image, idx) => {
         const element = imageRefs.current[idx];
         if (!element) return;
 
-        const sideOffsets: Record<ImageItem["side"], number[]> = {
-          left: [-24, -38, -28],
-          right: [24, 38, 28],
-          center: [18],
+        const target = imageRevealTargets[image.id] ?? {
+          x: 0,
+          y: 0,
+          rotation: 0,
+          delay: idx * 0.06,
         };
+        const entryX =
+          image.side === "left"
+            ? target.x - 120
+            : image.side === "right"
+              ? target.x + 120
+              : target.x;
+        const entryRotation =
+          image.side === "left"
+            ? target.rotation - 8
+            : image.side === "right"
+              ? target.rotation + 8
+              : target.rotation;
 
-        const sideList = images.filter((item) => item.side === image.side);
-        const sideIdx = sideList.indexOf(image);
-        const yMovement = sideOffsets[image.side][sideIdx] ?? 0;
-
-        gsap.fromTo(
+        revealTl.fromTo(
           element,
-          { y: 20, opacity: 0, scale: 0.96 },
           {
-            y: yMovement,
-            opacity: 1,
-            scale: 1,
-            ease: "power2.out",
-            scrollTrigger: {
-              trigger: containerRef.current,
-              start: "top 82%",
-              end: "bottom bottom",
-              scrub: 1,
-              invalidateOnRefresh: true,
-            },
+            x: entryX,
+            y: target.y + 86,
+            rotation: entryRotation,
+            scale: image.side === "center" ? 0.72 : 0.8,
+            opacity: 0,
+            filter: "blur(14px)",
+            clipPath: "inset(14% 14% 14% 14% round 1rem)",
           },
+          {
+            x: target.x,
+            y: target.y,
+            rotation: target.rotation,
+            scale: 1,
+            opacity: 1,
+            filter: "blur(0px)",
+            clipPath: "inset(0% 0% 0% 0% round 1rem)",
+            duration: image.side === "center" ? 1.2 : 1.05,
+            ease: image.side === "center" ? "back.out(1.45)" : "power3.out",
+          },
+          target.delay,
         );
       });
     }, containerRef);
@@ -125,23 +177,18 @@ const OurWorkSection = () => {
   return (
     <section
       ref={containerRef}
-      className="relative w-full bg-background overflow-hidden"
-      style={{ minHeight: "125vh" }}
+      className="relative w-full bg-transparent overflow-hidden"
+      style={{ minHeight: "120vh" }}
     >
-      <div
-        ref={textWrapperRef}
-        className="sticky top-0 h-screen flex items-start justify-center pt-16 md:pt-24 pointer-events-none z-20"
-      >
+      <div className="absolute inset-x-0 top-[35%] z-20 flex justify-center pointer-events-none">
         <div className="w-full max-w-2xl px-6 md:px-8 text-center pointer-events-auto">
-          <p className="text-gray-400 text-sm md:text-base mb-4 font-medium tracking-wide">
-            We built our own road.
+          <p className="text-gray-400 text-4xl md:text-6xl mb-4 font-medium tracking-wide">
+            Ideas, executed without friction.
           </p>
-          <h2 className="text-xl md:text-3xl lg:text-4xl font-bold text-foreground leading-tight text-balance">
-            Our revolutionary Physical AI Platform enables—for the first time
-            ever—true scale, generalizing to different form factors,
-            geographies, and environments. This breakthrough is powered by the
-            same AI model acting as a shared brain for both autonomous trucks
-            and robotaxis.
+          <h2 className="text-xl font-bold text-foreground leading-tight text-balance font-mono">
+            Your creative vision shouldn&apos;t stall in production. Poiro turns
+            briefs into publish-ready AI creatives—so your brand ships more,
+            tests more, and wins more.
           </h2>
         </div>
       </div>
@@ -149,9 +196,24 @@ const OurWorkSection = () => {
       <div className="absolute inset-0 pointer-events-none hidden sm:block">
         {leftImages.map((image, idx) => {
           const layouts = [
-            { top: "24%", left: "15%", w: 148, h: 182, style: "" },
-            { top: "44%", left: "18%", w: 138, h: 168, style: "" },
-            { top: "64%", left: "14%", w: 146, h: 170, style: "" },
+            {
+              top: "11%",
+              left: "8%",
+              w: 224,
+              h: 266,
+            },
+            {
+              top: "35%",
+              left: "13%",
+              w: 224,
+              h: 266,
+            },
+            {
+              top: "56%",
+              left: "6%",
+              w: 224,
+              h: 266,
+            },
           ];
           const layout = layouts[idx];
 
@@ -161,7 +223,7 @@ const OurWorkSection = () => {
               ref={(el) => {
                 imageRefs.current[images.indexOf(image)] = el;
               }}
-              className={`absolute ${layout.style} rounded-2xl overflow-hidden shadow-xl`}
+              className="absolute rounded-2xl overflow-hidden shadow-xl"
               style={{
                 top: layout.top,
                 left: layout.left,
@@ -183,9 +245,24 @@ const OurWorkSection = () => {
 
         {rightImages.map((image, idx) => {
           const layouts = [
-            { top: "24%", right: "15%", w: 148, h: 182, style: "" },
-            { top: "44%", right: "18%", w: 138, h: 168, style: "" },
-            { top: "64%", right: "14%", w: 146, h: 170, style: "" },
+            {
+              top: "10%",
+              right: "8%",
+              w: 224,
+              h: 266,
+            },
+            {
+              top: "34%",
+              right: "13%",
+              w: 224,
+              h: 266,
+            },
+            {
+              top: "56%",
+              right: "6%",
+              w: 224,
+              h: 266,
+            },
           ];
           const layout = layouts[idx];
 
@@ -195,7 +272,7 @@ const OurWorkSection = () => {
               ref={(el) => {
                 imageRefs.current[images.indexOf(image)] = el;
               }}
-              className={`absolute ${layout.style} rounded-2xl overflow-hidden shadow-xl`}
+              className="absolute rounded-2xl overflow-hidden shadow-xl"
               style={{
                 top: layout.top,
                 right: layout.right,
@@ -221,28 +298,29 @@ const OurWorkSection = () => {
               imageRefs.current[images.indexOf(centerImage)] = el;
             }}
             className="absolute left-1/2 -translate-x-1/2 rounded-2xl overflow-hidden shadow-2xl"
-            style={{ top: "78%", width: 210, height: 252 }}
+            style={{
+              top: "66%",
+              width: 224,
+              height: 266,
+            }}
           >
             <Image
               src={centerImage.src}
               alt={centerImage.alt}
-              width={210}
-              height={252}
+              width={224}
+              height={266}
               className="h-full w-full object-cover"
               priority
             />
           </div>
         ) : null}
 
-        <div className="absolute inset-x-0 top-[70%] mx-auto h-40 w-130 rounded-full bg-foreground/10 blur-3xl" />
+        <div className="absolute inset-x-0 top-[74%] mx-auto h-40 w-130 rounded-full bg-foreground/10 blur-3xl" />
       </div>
 
       <div className="absolute inset-x-0 bottom-14 flex justify-center px-4 sm:hidden">
         {centerImage ? (
           <div
-            ref={(el) => {
-              imageRefs.current[images.indexOf(centerImage)] = el;
-            }}
             className="rounded-2xl overflow-hidden shadow-2xl"
             style={{ width: 210, height: 250 }}
           >
