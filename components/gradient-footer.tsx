@@ -109,13 +109,13 @@ const GradientFooter = () => {
             >
               Privacy Policy
             </a>
-            <span className="hidden text-neutral-600 sm:inline">•</span>
-            <a
+            {/* <span className="hidden text-neutral-600 sm:inline">•</span> */}
+            {/* <a
               href="#"
               className="text-sm text-neutral-400 transition-colors hover:text-white"
             >
               Cookies
-            </a>
+            </a> */}
           </div>
 
           {/* Right side - Copyright */}
