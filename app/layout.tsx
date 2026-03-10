@@ -41,7 +41,7 @@ export default function RootLayout({
       >
         <ThemeInitializer />
         {/* <MouseMoveEffect /> */}
-           <PixelTrail />
+        <PixelTrail />
         {/* <BlocksOverlay /> */}
         <div className="relative z-10">{children}</div>
       </body>
