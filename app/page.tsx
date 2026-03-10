@@ -1,3 +1,5 @@
+"use client";
+
 import { BentoGrid } from "@/components/bento-grid";
 import Faq from "@/components/faqs";
 import GradientFooter from "@/components/gradient-footer";
@@ -8,46 +10,57 @@ import GradualBlurMemo from "@/components/home/gradual.blur";
 import { HeroSection } from "@/components/home/hero-section";
 import { OurWorkHomeSection } from "@/components/home/our-work-home-section";
 import { WorksGallerySection } from "@/components/home/works-gallery-section";
+import PixelPreloader from "@/components/PixelPreloader";
 // import { SectionTitle } from "@/components/section-title";
 import SvgPath from "@/components/svg-path";
+import { useEffect, useState } from "react";
 
 export default function Home() {
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setTimeout(() => setLoading(false), 3000);
+  }, []);
   return (
     <>
-      <main className="relative min-h-screen overflow-hidden">
-        <div className="relative z-10">
-          <HeroSection />
+      {loading && <PixelPreloader />}
 
-          <OurWorkHomeSection />
+      {!loading && (
+        <main className="relative min-h-screen overflow-hidden">
+          <div className="relative z-10">
+            <HeroSection />
 
-          <CtaSection />
+            <OurWorkHomeSection />
 
-          <WorksGallerySection />
+            <CtaSection />
 
-          <SvgPath />
+            <WorksGallerySection />
 
-          <BentoGrid />
+            <SvgPath />
 
-          <BriefUploadSection />
+            <BentoGrid />
 
-          <Faq />
+            <BriefUploadSection />
 
-          <GradientFooter />
+            <Faq />
 
-          <GradualBlurMemo
-            target="page"
-            position="bottom"
-            height="6rem"
-            strength={2}
-            divCount={10}
-            curve="bezier"
-            exponential
-            opacity={1}
-          />
-        </div>
+            <GradientFooter />
 
-        <FloatingDockSection />
-      </main>
+            <GradualBlurMemo
+              target="page"
+              position="bottom"
+              height="6rem"
+              strength={2}
+              divCount={10}
+              curve="bezier"
+              exponential
+              opacity={1}
+            />
+          </div>
+
+          <FloatingDockSection />
+        </main>
+      )}
     </>
   );
 }
