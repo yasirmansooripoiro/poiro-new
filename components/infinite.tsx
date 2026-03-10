@@ -76,6 +76,7 @@ interface PlaneData {
 const DEFAULT_DEPTH_RANGE = 50;
 const MAX_HORIZONTAL_OFFSET = 8;
 const MAX_VERTICAL_OFFSET = 8;
+const CENTER_EXCLUSION_RADIUS = 2.8;
 
 function optimizeTextureSrc(src: string): string {
   // Downscale large Unsplash payloads to speed up first visible texture decode.
@@ -289,14 +290,23 @@ function GalleryScene({
       const horizontalAngle = (i * 2.618) % (Math.PI * 2); // Golden angle for natural distribution
       const verticalAngle = (i * 1.618 + Math.PI / 3) % (Math.PI * 2); // Offset angle for vertical
 
-      const horizontalRadius = (i % 3) * 1.2; // Vary the distance from center
-      const verticalRadius = ((i + 1) % 4) * 0.8; // Different pattern for vertical
+      const horizontalRadius = ((i % 3) + 1) * 1.1; // Keep lanes away from exact center
+      const verticalRadius = (((i + 1) % 4) + 1) * 0.65; // Similar for vertical distribution
 
-      const x =
+      let x =
         (Math.sin(horizontalAngle) * horizontalRadius * maxHorizontalOffset) /
         3;
-      const y =
+      let y =
         (Math.cos(verticalAngle) * verticalRadius * maxVerticalOffset) / 4;
+
+      // Keep images from passing through the center/title zone.
+      const distanceFromCenter = Math.hypot(x, y);
+      if (distanceFromCenter < CENTER_EXCLUSION_RADIUS) {
+        const safeScale =
+          CENTER_EXCLUSION_RADIUS / Math.max(distanceFromCenter, 0.001);
+        x *= safeScale;
+        y *= safeScale;
+      }
 
       positions.push({ x, y });
     }
