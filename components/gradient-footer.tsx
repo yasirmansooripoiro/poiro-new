@@ -11,36 +11,36 @@ import PixelBlast from "./pixel-blast";
 gsap.registerPlugin(ScrollTrigger);
 
 const GradientFooter = () => {
-  const footerRef = useRef<HTMLElement>(null);
+  // const footerRef = useRef<HTMLElement>(null);
 
-  useEffect(() => {
-    if (!footerRef.current) return;
+  // useEffect(() => {
+  //   if (!footerRef.current) return;
 
-    const ctx = gsap.context(() => {
-      gsap.to(footerRef.current, {
-        maxWidth: "80rem",
-        borderRadius: "0.75rem",
-        paddingLeft: "1.5rem",
-        paddingRight: "1.5rem",
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: footerRef.current,
-          start: "top bottom-=100",
-          end: "top center",
-          scrub: 1.2,
-          toggleActions: "play reverse play reverse",
-        },
-      });
-    }, footerRef);
+  //   const ctx = gsap.context(() => {
+  //     gsap.to(footerRef.current, {
+  //       maxWidth: "80rem",
+  //       borderRadius: "0.75rem",
+  //       paddingLeft: "1.5rem",
+  //       paddingRight: "1.5rem",
+  //       ease: "power3.out",
+  //       scrollTrigger: {
+  //         trigger: footerRef.current,
+  //         start: "top bottom-=100",
+  //         end: "top center",
+  //         scrub: 1.2,
+  //         toggleActions: "play reverse play reverse",
+  //       },
+  //     });
+  //   }, footerRef);
 
-    return () => ctx.revert();
-  }, []);
+  //   return () => ctx.revert();
+  // }, []);
 
   return (
     <footer
-      ref={footerRef}
-      className="relative w-full overflow-hidden mx-auto border border-white/20 mb-20"
-      style={{ maxWidth: "100%" }}
+      // ref={footerRef}
+      className="relative w-full overflow-hidden mx-auto border border-white/20 mb-20 max-w-7xl rounded-2xl"
+      // style={{ maxWidth: "100%" }}
     >
       <div className="absolute inset-0">
         {/* <Galaxy
