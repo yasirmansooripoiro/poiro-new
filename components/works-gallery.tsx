@@ -62,7 +62,7 @@ export function WorksGallery() {
 
   return (
     <div className="relative w-full bg-transparent overflow-hidden py-20">
-      <CustomCursor isActive={hoveredId !== null} />
+      {/* <CustomCursor isActive={hoveredId !== null} /> */}
       <div className="container mx-auto px-6">
         <div className="flex gap-4 items-stretch">
           {projects.map((project) => (
