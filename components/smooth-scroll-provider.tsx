@@ -13,7 +13,6 @@ export default function SmoothScrollProvider({
     const lenis = new Lenis({
       duration: 1.1,
       smoothWheel: true,
-      smoothTouch: false,
     });
 
     const tick = (time: number) => {
